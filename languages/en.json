@@ -1,28 +1,27 @@
 {
   "app": {
     "name": "Facebook",
-    "description": "Display current date and time",
+    "description": "Use your facebook's account to show real content.",
     "author": {
       "name": "DynamicScreen",
-      "email": "bonjour@dynamicscreen.com",
-      "note": "Written with love <3 Buy me a cofee @ itsajoke.com !"
+      "email": "bonjour@dynamicscreen.com"
     }
   },
   "privileges": {
     "needs_account": {
       "google": {
-        "why": "Because it's required... :'("
+        "why": "We are using your account to fetch the latest data from facebook's API."
       }
     }
   },
   "modules": {
-    "today": {
-      "name": "Today",
-      "description": "Display current date and time"
+    "facebook": {
+      "name": "Facebook",
+      "description": "Show latest posts from a facebook page."
     },
-    "unsplash-official": {
-      "name": "Unsplash",
-      "description": "Allow data fetching from Unsplash API."
+    "facebook-driver": {
+      "name": "Facebook",
+      "description": "Allow data fetching from Facebook API."
     }
   }
 }

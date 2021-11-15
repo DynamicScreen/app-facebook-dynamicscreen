@@ -1,50 +1,50 @@
 # YAML
-id: app-today-dynamicscreen
+id: app-facebook-dynamicscreen
 name: app.name
 description: app.description
-logo: ./resources/img/Donatello.jpeg
-version: 0.2.0
+logo: fab fa-facebook
+version: 0.3.0
 channel: stable
 api-level: 1
-color: yellow
+color: orange
 author:
     name: DynamicScreen
     email: bonjour@dynamicscreen.com
 privileges:
     needs_account:
-        -   identifier: unsplash-official
-            type: unsplash
+        -   identifier: facebook-driver
+            type: facebook
             why: privileges.needs_account.unsplash.why
 modules:
-    -   name: modules.unsplash-official.name
-        logo: fas fa-images
-        description: modules.unsplash-official.description
-        identifier: unsplash-official
+    -   name: modules.facebook-driver.name
+        logo: fab fa-facebook
+        description: modules.facebook-driver.description
+        identifier: facebook-driver
         color: orange
         type: auth-provider
         options:
-            provider: unsplash
+            provider: facebook
             vue:
                 component: src/Unsplash/Unsplash.ts
             php:
-                handler: \DynamicScreen\Today\Unsplash\UnsplashAuthProviderHandler
+                handler: \DynamicScreen\Facebook\FacebookDriver\FacebookAuthProviderHandler
             node:
                 handler: src/handler.js
 
-    -   name: modules.today.name
-        logo: fal fa-clock
-        identifier: today
-        color: #7A00D4
+    -   name: modules.facebook.name
+        logo: fab fa-facebook
+        identifier: facebook
+        color: pink
         type: slide
-        description: modules.today.description
+        description: modules.facebook.description
         options:
             privileges:
                 needs_account:
-                    - unsplash-official
+                    - facebook-driver
             vue:
-                component: src/Today/Today.ts
-                options: src/Today/TodayOptions.ts
+                component: src/Facebook/Facebook.ts
+                options: src/Facebook/FacebookOptions.ts
             php:
-                handler: \DynamicScreen\Today\Today\TodaySlideHandler
+                handler: \DynamicScreen\Facebook\Facebook\FacebookSlideHandler.php
             node:
                 handler: src/handler.js
