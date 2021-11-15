@@ -1,6 +1,6 @@
 <?php
 
-namespace DynamicScreen\Today\Today;
+namespace DynamicScreen\Facebook\Facebook;
 
 use App\Domain\Module\Model\Module;
 use Carbon\Carbon;
