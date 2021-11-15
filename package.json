@@ -1,0 +1,32 @@
+{
+  "name": "dynamicscreen-facebook",
+  "version": "0.2.0",
+  "description": "Show latest posts from a facebook account.",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DynamicScreen",
+  "license": "MIT",
+  "dependencies": {
+    "dynamicscreen-sdk-js": "^0.0.20",
+    "i18next": "^20.4.0",
+    "webpack": "^5.50.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.11"
+  },
+  "devDependencies": {
+    "@types/node": "^16.6.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dynamicscreen/app-facebook-dynamicscreen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dynamicscreen/app-facebook-dynamicscreen/issues"
+  },
+  "homepage": "https://github.com/Dynamicscreen/app-facebook-dynamicscreen#readme"
+}

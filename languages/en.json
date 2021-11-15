@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "Facebook",
+    "description": "Display current date and time",
+    "author": {
+      "name": "DynamicScreen",
+      "email": "bonjour@dynamicscreen.com",
+      "note": "Written with love <3 Buy me a cofee @ itsajoke.com !"
+    }
+  },
+  "privileges": {
+    "needs_account": {
+      "google": {
+        "why": "Because it's required... :'("
+      }
+    }
+  },
+  "modules": {
+    "today": {
+      "name": "Today",
+      "description": "Display current date and time"
+    },
+    "unsplash-official": {
+      "name": "Unsplash",
+      "description": "Allow data fetching from Unsplash API."
+    }
+  }
+}

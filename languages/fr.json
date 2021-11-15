@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "Today",
+    "description": "Affiche la date du jour et l'heure, sur une magnifique image en fond",
+    "author": {
+      "name": "DynamicScreen",
+      "email": "bonjour@dynamicscreen.com",
+      "note": "Written with love <3 Buy me a cofee @ itsajoke.com !"
+    }
+  },
+  "privileges": {
+    "needs_account": {
+      "google": {
+        "why": "Because it's required... :'("
+      }
+    }
+  },
+  "modules": {
+    "today": {
+      "name": "Today",
+      "description": "Affiche la date du jour et l'heure, sur une magnifique image en fond"
+    },
+    "unsplash-official": {
+      "name": "Unsplash",
+      "description": "Permet la connexion entre Unsplash et DynamicScreen pour afficher de la donnée."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+# YAML
+id: app-today-dynamicscreen
+name: app.name
+description: app.description
+logo: ./resources/img/Donatello.jpeg
+version: 0.2.0
+channel: stable
+api-level: 1
+color: yellow
+author:
+    name: DynamicScreen
+    email: bonjour@dynamicscreen.com
+privileges:
+    needs_account:
+        -   identifier: unsplash-official
+            type: unsplash
+            why: privileges.needs_account.unsplash.why
+modules:
+    -   name: modules.unsplash-official.name
+        logo: fas fa-images
+        description: modules.unsplash-official.description
+        identifier: unsplash-official
+        color: orange
+        type: auth-provider
+        options:
+            provider: unsplash
+            vue:
+                component: src/Unsplash/Unsplash.ts
+            php:
+                handler: \DynamicScreen\Today\Unsplash\UnsplashAuthProviderHandler
+            node:
+                handler: src/handler.js
+
+    -   name: modules.today.name
+        logo: fal fa-clock
+        identifier: today
+        color: #7A00D4
+        type: slide
+        description: modules.today.description
+        options:
+            privileges:
+                needs_account:
+                    - unsplash-official
+            vue:
+                component: src/Today/Today.ts
+                options: src/Today/TodayOptions.ts
+            php:
+                handler: \DynamicScreen\Today\Today\TodaySlideHandler
+            node:
+                handler: src/handler.js
