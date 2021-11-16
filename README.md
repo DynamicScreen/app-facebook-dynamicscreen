@@ -1,3 +1,1 @@
-# app-weather-dynamiscreen
-
-```php artisan migrate```
+# app-facebook-dynamiscreen
