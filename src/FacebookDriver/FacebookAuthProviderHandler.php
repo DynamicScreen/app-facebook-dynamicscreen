@@ -11,7 +11,7 @@ use Facebook\Facebook;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class FacebookAccountDriver extends OAuthProviderHandler
+class FacebookAuthProviderHandler extends OAuthProviderHandler
 {
     public static string $provider = 'facebook';
 
