@@ -1,15 +1,12 @@
 <?php
 
-
-namespace App\AccountDrivers\Drivers;
-
+namespace DynamicScreen\Facebook\FacebookDriver;
 
 use Carbon\Carbon;
-use DynamicScreen\Facebook\FacebookDriver\FacebookPersistentDataHandler;
-use DynamicScreen\SdkPhp\Handlers\OAuthProviderHandler;
 use Facebook\Facebook;
-use Illuminate\Support\Arr;
+use DynamicScreen\SdkPhp\Handlers\OAuthProviderHandler;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class FacebookAuthProviderHandler extends OAuthProviderHandler
 {
