@@ -14,7 +14,7 @@ privileges:
     needs_account:
         -   identifier: facebook-driver
             type: facebook
-            why: privileges.needs_account.unsplash.why
+            why: privileges.needs_account.facebook.why
 modules:
     -   name: modules.facebook-driver.name
         logo: fab fa-facebook
@@ -45,6 +45,6 @@ modules:
                 component: src/Facebook/Facebook.ts
                 options: src/Facebook/FacebookOptions.ts
             php:
-                handler: \DynamicScreen\Facebook\Facebook\FacebookSlideHandler.php
+                handler: \DynamicScreen\Facebook\Facebook\FacebookSlideHandler
             node:
                 handler: src/handler.js

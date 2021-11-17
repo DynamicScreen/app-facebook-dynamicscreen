@@ -5,12 +5,20 @@ namespace DynamicScreen\Facebook\FacebookDriver;
 use Carbon\Carbon;
 use Facebook\Facebook;
 use DynamicScreen\SdkPhp\Handlers\OAuthProviderHandler;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
 class FacebookAuthProviderHandler extends OAuthProviderHandler
 {
     public static string $provider = 'facebook';
+
+    public $default_config = [];
+
+    public function __construct($config = null)
+    {
+        $this->default_config = $config;
+    }
 
     public function identifier()
     {
@@ -37,8 +45,10 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return '#1977F2';
     }
 
-    public function signin($config, $data = null)
+    public function signin($callbackUrl = null)
     {
+        $callbackUrl = $callbackUrl ?? route('api.oauth.callback');
+
         $uuid = Str::uuid()->toString();
         $fb = $this->getFacebookClient([], $uuid);
 
@@ -67,8 +77,10 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
 //
 //    }
 
-    public function testConnection($config)
+    public function testConnection($config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
 
         $fb->get(
@@ -78,8 +90,10 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return response('', $fb->getLastResponse()->getHttpStatusCode());
     }
 
-    public function getUserInfos($config)
+    public function getUserInfos($config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
 
         $user = $fb->get(
@@ -126,22 +140,26 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
     public function getFacebookClient($options = [], $id = null)
     {
         return new Facebook(array_merge([
-            'app_id'                => config("services.{$this->getDriverIdentifier()}.client_id"),
-            'app_secret'            => config("services.{$this->getDriverIdentifier()}.client_secret"),
+            'app_id'                => config("services.{$this->getProviderIdentifier()}.client_id"),
+            'app_secret'            => config("services.{$this->getProviderIdentifier()}.client_secret"),
             'default_graph_version' => 'v6.0',
             'persistent_data_handler' => new FacebookPersistentDataHandler($id ?? Str::uuid()->toString()),
         ], $options));
     }
 
-    public function getFB($config)
+    public function getFB($config = null)
     {
+        $config = $config ?? $this->default_config;
+
         return $this->getFacebookClient([
             'default_access_token'  => Arr::get($config, 'token')
         ]);
     }
 
-    public function getInstagramAccounts($config)
+    public function getInstagramAccounts($config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
         $response = $fb->get('/me/accounts?fields=instagram_business_account');
 
@@ -155,8 +173,10 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return $pages->toArray();
     }
 
-    public function getFreshPosts($config, $pageId, $quantity = null)
+    public function getFreshPosts($pageId, $quantity = null, $config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fields = 'to,reactions.summary(total_count),message_tags,message,permalink_url,shares,from,icon,attachments,created_time,updated_time';
         $offset = 20;
 
@@ -179,16 +199,21 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return !$quantity ? $allPosts : array_slice($allPosts, 0, $quantity);
     }
 
-    public function getPosts($config, $pageId, $quantity = null)
+    public function getPosts($pageId, $quantity = null, $config = null)
     {
-        return json_decode(Cache::remember("dynamicscreen.facebook::getPosts:{$pageId}, {Arr::get($config, 'account_id')}, {$quantity}", Carbon::now()->addHour(), function () use ($config, $pageId, $quantity) {
-            return json_encode($this->getFreshPosts($config, $pageId, $quantity), true);
+        $config = $config ?? $this->default_config;
+
+//        dd($config, $pageId, $quantity);
+        return json_decode(Cache::remember("dynamicscreen.facebook::getPosts:{$pageId}}, {$quantity}", Carbon::now()->addHour(), function () use ($config, $pageId, $quantity) {
+            return json_encode($this->getFreshPosts($pageId, $quantity, $config), true);
         }), true);
     }
 
 
-    public function getFreshPage($config, $pageId)
+    public function getFreshPage($pageId, $config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fields = 'username,rating_count,new_like_count,cover,picture.width(200).height(200),fan_count,bio,website,name,link,about,description';
         $fb = $this->getFB($config);
 
@@ -198,20 +223,25 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return $page->toArray();
     }
 
-    public function getPage($config, $pageId)
+    public function getPage($pageId, $config = null)
     {
-        return json_decode(Cache::remember("{$this->getDriverIdentifier()}::getPage:{$pageId}, {Arr::get($config, 'account_id')}", Carbon::now()->addHour(), function () use ($config, $pageId) {
-            return json_encode($this->getFreshPage($config, $pageId), true);
+        $config = $config ?? $this->default_config;
+
+        return json_decode(Cache::remember("{$this->getProviderIdentifier()}::getPage:{$pageId}}", Carbon::now()->addHour(), function () use ($config, $pageId) {
+            return json_encode($this->getFreshPage($pageId, $config), true);
         }), true);
     }
 
-    public function getPages($config)
+    public function getPages($config = null)
     {
-        $fb = $this->getFB($config);
+        $config = $config ?? $this->default_config;
+
+        $fb = $this->getFB();
+
         $response = $fb->get('/me/accounts?fields=name');
 
         $pages = collect(json_decode($response->getBody())->data)->mapWithKeys(function ($page) use ($config) {
-            $freshPage = $this->getFreshPage($config, $page->id);
+            $freshPage = $this->getFreshPage($page->id, $config);
             if(empty($freshPage['username'])){
                 return [$page->id => $page->name];
             }
@@ -222,11 +252,13 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
     }
 
 
-    public function getPhotos($config, $pageId)
+    public function getPhotos($pageId, $config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
         $photos = [];
-        $listePhotos = $this->getListPhotos($config, $pageId);
+        $listePhotos = $this->getListPhotos($pageId, $config);
         if ($listePhotos) {
             foreach ($listePhotos as $photo) {
                 $response = $fb->get('/' . $photo->id . '?fields=media_url');
@@ -239,8 +271,10 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         }
     }
 
-    public function getListPhotos($config, $pageId)
+    public function getListPhotos($pageId, $config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
         $response = $fb->get('/' . $pageId . '/media');
         if (!isset(json_decode($response->getBody())->data)) {
@@ -251,14 +285,18 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return $pictureList;
     }
 
-    public function getName($config, $id)
+    public function getName($id, $config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $fb = $this->getFB($config);
         return array_get(json_decode($fb->get('/' . $id . '?fields=name')->getBody(), true), 'name');
     }
 
-    public function refreshToken($config)
+    public function refreshToken($config = null)
     {
+        $config = $config ?? $this->default_config;
+
         $expires_array = Arr::get($config, 'expires');
         $expiration_date = Carbon::createFromTimeString($expires_array['date'], $expires_array['timezone']);
 
@@ -267,8 +305,8 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
             try {
 
                 $fb = new Facebook([
-                    'app_id'                => config("services.{$this->getDriverIdentifier()}.client_id"),
-                    'app_secret'            => config("services.{$this->getDriverIdentifier()}.client_secret"),
+                    'app_id'                => config("services.{$this->getProviderIdentifier()}.client_id"),
+                    'app_secret'            => config("services.{$this->getProviderIdentifier()}.client_secret"),
                     'default_graph_version' => 'v6.0'
                 ]);
 

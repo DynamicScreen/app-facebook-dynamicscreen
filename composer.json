@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "facebook/graph-sdk": "^5.1"
+        "facebook/graph-sdk": "^5.7"
     },
     "config": {
         "optimize-autoloader": true,
