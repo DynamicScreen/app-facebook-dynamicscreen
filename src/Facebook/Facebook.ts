@@ -8,8 +8,12 @@ import {
     SlideModule
 } from "dynamicscreen-sdk-js";
 
-import {computed, onMounted, VNode} from 'vue';
+import {computed, reactive, ref} from 'vue';
 import i18next from "i18next";
+
+import { h } from "vue"
+import Post from "../Components/Post";
+import PostAttachments from "../Components/PostAttachments";
 
 const en = require("../../languages/en.json");
 const fr = require("../../languages/fr.json");
@@ -64,22 +68,18 @@ export default class FacebookSlideModule extends SlideModule {
     setup(props, ctx) {
         const { h, reactive, ref, Transition } = ctx;
 
-        const slide = reactive(props.slide) as IPublicSlide;
-        this.context = reactive(props.slide.context);
+        const slide = reactive(props.slide) as IPublicSlide
+        this.context = reactive(props.slide.context)
 
-        let refreshTimeInterval: number | undefined;
-
-        const saint = ref(slide.data.saint);
-        const picture = ref(slide.data.random_photo);
-        const author = ref(slide.data.author);
-
-        const now = ref(new Date());
-        const hours = computed(() => {
-            return now.value.getHours();
+        const logo: string = "fab fa-facebook";
+        const isPostWithAttachment = computed(() => {
+            return !!slide.data.attachmentUrl;
         })
-        const minutes = computed(() => {
-            return now.value.getMinutes();
-        })
+        const postAttachment = isPostWithAttachment.value ? ref(slide.data.attachmentUrl) : null;
+        const text = ref(slide.data.text);
+        const userPicture = ref(slide.data.user.picture);
+        const userName = ref(slide.data.user.name);
+        const publicationDate = ref(slide.data.publicationDate);
 
         this.context.onPrepare(async () => {
 
@@ -89,9 +89,21 @@ export default class FacebookSlideModule extends SlideModule {
         });
 
         this.context.onPlay(async () => {
-            refreshTimeInterval = window.setInterval(() => {
-                now.value = new Date();
-            }, 1000 * 60);
+            this.context.anime({
+                targets: "#post",
+                translateX: [-40, 0],
+                opacity: [0, 1],
+                duration: 600,
+                easing: 'easeOutQuad'
+            });
+            this.context.anime({
+                targets: "#user",
+                translateX: [-40, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: 250,
+                easing: 'easeOutQuad'
+            });
         });
 
         // this.context.onPause(async () => {
@@ -99,35 +111,30 @@ export default class FacebookSlideModule extends SlideModule {
         // });
 
         this.context.onEnded(async () => {
-            if (refreshTimeInterval) { clearInterval(refreshTimeInterval) }
         });
 
         return () =>
             h("div", {
-                class: "flex w-full h-full bg-no-repeat bg-cover",
-                style: { backgroundImage: `url(${picture.value})`}
+                class: "w-full h-full flex justify-center items-center"
             }, [
-                h("div", {
-                    class: "flex w-full justify-end"
-                }, [
-                    h("div", {
-                        class: "flex h-full flex-col space-y-5 w-3/12 bg-opacity-40 bg-black justify-center items-center text-white backdrop-filter backdrop-blur-md"
-                    }, [
-                        h(Clock, {
-                            hours: hours.value,
-                            minutes: minutes.value
-                        }),
-                        h("div", {
-                            class: "text-8xl font-medium"
-                        }, "15:40"),
-                        h("div", {
-                            class: "text-4xl"
-                        }, "Wednesday 13 October"),
-                        h("div", {
-                            class: "absolute bottom-5 text-center text-lg"
-                        }, `Pictur by : ${author.value}`)
-                    ])
-                ])
+                !isPostWithAttachment.value && h(Post, {
+                    text: text.value,
+                    userPicture: userPicture.value,
+                    userName: userName.value,
+                    publicationDate: publicationDate.value,
+                    class: "w-1/2"
+                }),
+                isPostWithAttachment.value && h(PostAttachments, {
+                    text: text.value,
+                    userPicture: userPicture.value,
+                    userName: userName.value,
+                    publicationDate: publicationDate.value,
+                    postAttachment: postAttachment.value,
+                    class: "w-full h-full"
+                }),
+                h("i", {
+                    class: "w-16 h-16 absolute top-10 right-10 portrait:bottom-10 portrait:top-auto text-blue-400 " + logo
+                })
             ])
     }
 }
