@@ -45,6 +45,13 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return '#1977F2';
     }
 
+    public function provideData($settings = [])
+    {
+        $this->addData('me', fn () => $this->getUserInfos());
+        $this->addData('pages', fn () => $this->getPages());
+//        $this->addData('page', fn () => $this->getPage(Arr::get($settings, 'pageId')));
+    }
+
     public function signin($callbackUrl = null)
     {
         $callbackUrl = $callbackUrl ?? route('api.oauth.callback');
@@ -110,7 +117,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
 
 
 
-    public function callback($request, $redirectUrl)
+    public function callback($request, $redirectUrl = null)
     {
         $id = $request->get('state');
         $fb = $this->getFacebookClient([], $id);
@@ -132,8 +139,6 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         $dataStr = json_encode($data);
 
         return redirect()->away($redirectUrl ."&data=$dataStr");
-
-//        return route('manager.settings.accounts.edit', ['_spacename' => $space_name, 'account' => $account]);
     }
 
     public function getFacebookClient($options = [], $id = null)

@@ -64,35 +64,41 @@ export default class FacebookOptionsModule extends SlideModule {
     setup(props, ctx, update: SlideUpdateFunctions, OptionsContext) {
       const { h, ref, reactive } = ctx;
 
-      // const slide = reactive(props.slide) as IPublicSlide;
+      const { Field, FieldsRow, Toggle, Select, NumberInput } = OptionsContext.components
 
-      // const accountsList = ref(slide.data.accounts);
+      let isAccountDataLoaded = ref(false)
+      let pages = reactive({});
 
+      OptionsContext.getAccountData("facebook", "pages", (accountId: number | undefined) => {
+        isAccountDataLoaded.value = accountId !== undefined;
+        console.log(accountId, 'onchange')
+        if (accountId === undefined) {
+          pages.value = {};
+        }
+      }, { extra: 'parameters' })
+        .value
+        .then((data: any) => {
+          isAccountDataLoaded.value = true;
+          pages.value = data;
+          console.log('account data successfully fetched', pages)
+        });
 
-      const { Field, FieldsRow, Toggle, Select } = OptionsContext.components
-      const account = { id: '228', icon: 'fas fa-image', name: 'unplash account test' };
       return () => [
         h(FieldsRow, {}, [
-          h(Field, { class: 'flex-1', label: "Compte Unsplash" }, [
-            h(Select, {
-              options: [account],
-              placeholder: "Choisissez un compte",
-              ...update.option("__accounts")
-            }),
+          h(Field, { class: 'flex-1', label: "Nombre de pages" }, [
+            h(NumberInput, { min: 0, max: 100, default: 1, ...update.option("pageCount") })
           ]),
-          h(Field, { class: 'flex-1', label: "Catégorie" }, [
+          h(Field, { class: 'flex-1', label: "Nombre de publications" }, [
+            h(NumberInput, { min: 0, max: 100, default: 1, ...update.option("postCount") })
+          ]),
+          h(isAccountDataLoaded.value && Field, { class: 'flex-1', label: "Page à afficher" }, [
             h(Select, {
-              options: [
-                { name: 'nature' },
-                { name: 'animals' },
-                { name: 'culture'},
-              ],
-              placeholder: "Choisissez une catégorie",
+              options: [pages],
+              placeholder: "Choisissez une des pages à afficher",
               keyProp: 'name',
-              ...update.option("category") })
-          ]),
-        ]),
-        h(Toggle, { class: 'flex-1', ...update.option("saint") }, "Affiche le saint du jour."),
+              ...update.option("pageId") })
+          ])
+        ])
       ]
     }
 }
