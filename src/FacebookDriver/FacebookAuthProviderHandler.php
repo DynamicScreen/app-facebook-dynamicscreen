@@ -58,9 +58,8 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         $helper->getPersistentDataHandler()->set('state', request()->get('state', $uuid));
 
         $permissions = ['email', 'instagram_basic', 'manage_pages']; // Optional permissions
-        $redirectUrl = route('api.oauth.callback');
 //        route('oauth.callback', ['driver_id' =>$this->identifier()]);
-        $loginUrl = $helper->getLoginUrl($redirectUrl, $permissions);
+        $loginUrl = $helper->getLoginUrl($callbackUrl, $permissions);
 
         return $loginUrl;
 
@@ -111,7 +110,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
 
 
 
-    public function callback($request, $redirectUrl = null)
+    public function callback($request, $redirectUrl)
     {
         $id = $request->get('state');
         $fb = $this->getFacebookClient([], $id);
@@ -204,7 +203,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         $config = $config ?? $this->default_config;
 
 //        dd($config, $pageId, $quantity);
-        return json_decode(Cache::remember("dynamicscreen.facebook::getPosts:{$pageId}}, {$quantity}", Carbon::now()->addHour(), function () use ($config, $pageId, $quantity) {
+        return json_decode(Cache::remember("{$this->getProviderIdentifier()}::getPosts:{$pageId}}, {$quantity}", Carbon::now()->addHour(), function () use ($config, $pageId, $quantity) {
             return json_encode($this->getFreshPosts($pageId, $quantity, $config), true);
         }), true);
     }
