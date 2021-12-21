@@ -17,6 +17,7 @@ class FacebookSlideHandler extends SlideHandler
         $expiration = Carbon::now()->endOfDay();
         $cache_uuid = base64_encode(json_encode($slide->getOption('category')));
         $cache_key = $this->getIdentifier() ."_{$cache_uuid}";
+
         $driver = $this->getAuthProvider($slide->getAccounts());
 
         if ($driver == null) return;
@@ -32,10 +33,5 @@ class FacebookSlideHandler extends SlideHandler
                 'theme' => $options['theme']
             ]);
         }
-    }
-
-    public function needed_accounts()
-    {
-        return $this->module->getOption('privileges.needs_account', false);
     }
 }

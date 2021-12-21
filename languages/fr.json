@@ -17,7 +17,14 @@
   "modules": {
     "facebook": {
       "name": "Facebook",
-      "description": "Affiche les derniers posts d'une page facebook."
+      "description": "Affiche les derniers posts d'une page facebook.",
+      "options": {
+        "page_count": "Nombre de pages",
+        "post_count": "Nombre de publications",
+        "account_picker": {
+          "label": "Page à afficher",
+          "placeholder": "Choisissez une page à afficher..."
+      }
     },
     "facebook-driver": {
       "name": "Facebook",

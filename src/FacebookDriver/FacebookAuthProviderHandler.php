@@ -294,7 +294,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         $config = $config ?? $this->default_config;
 
         $fb = $this->getFB($config);
-        return array_get(json_decode($fb->get('/' . $id . '?fields=name')->getBody(), true), 'name');
+        return Arr::get(json_decode($fb->get('/' . $id . '?fields=name')->getBody(), true), 'name');
     }
 
     public function refreshToken($config = null)

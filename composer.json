@@ -1,7 +1,4 @@
 {
-    "name": "dynamicscreen/app-facebook",
-    "description": "Facebook app for DynamicScreen SaaS",
-    "license": "MIT",
     "authors": [
         {
             "name": "DynamicScreen",
@@ -10,11 +7,6 @@
     ],
     "require": {
         "facebook/graph-sdk": "^5.7"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
     },
     "autoload": {
         "psr-4": {

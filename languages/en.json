@@ -17,7 +17,14 @@
   "modules": {
     "facebook": {
       "name": "Facebook",
-      "description": "Show latest posts from a facebook page."
+      "description": "Show latest posts from a facebook page.",
+      "options": {
+        "page_count": "Pages count",
+        "post_count": "Posts count",
+        "account_picker": {
+          "label": "Page to show",
+          "placeholder": "Select a page to show..."
+        }
     },
     "facebook-driver": {
       "name": "Facebook",

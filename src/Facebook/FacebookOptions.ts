@@ -1,83 +1,35 @@
 import {
-  BaseContext,
-  AssetDownload,
-  IAssetsStorageAbility,
-  IGuardsManager,
-  ISlideContext,
-  IPublicSlide,
+  ISlideOptionsContext,
+  VueInstance,
   SlideModule,
-  SlideUpdateFunctions
 } from "dynamicscreen-sdk-js";
 
 import i18next from "i18next";
 
-const en = require("../../languages/en.json");
-const fr = require("../../languages/fr.json");
-
 export default class FacebookOptionsModule extends SlideModule {
-    constructor(context: ISlideContext) {
-        super(context);
-    }
-
-    trans(key: string) {
-        return i18next.t(key);
-    };
-
     async onReady() {
         return true;
     };
 
-    onMounted() {
-        console.log('onMounted')
-    }
+    setup(props: Record<string, any>, vue: VueInstance, context: ISlideOptionsContext) {
+      const { h, ref, reactive } = vue;
 
-    //@ts-ignore
-    onErrorTracked(err: Error, instance: Component, info: string) {
-    }
-
-    //@ts-ignore
-    onRenderTriggered(e) {
-    }
-
-    //@ts-ignore
-    onRenderTracked(e) {
-    }
-
-    onUpdated() {
-    }
-
-    initI18n() {
-        i18next.init({
-            fallbackLng: 'en',
-            lng: 'fr',
-            resources: {
-                en: { translation: en },
-                fr: { translation: fr },
-            },
-            debug: true,
-        }, (err, t) => {
-            if (err) return console.log('something went wrong loading translations', err);
-        });
-    };
-
-    // @ts-ignore
-    setup(props, ctx, update: SlideUpdateFunctions, OptionsContext) {
-      const { h, ref, reactive } = ctx;
-
-      const { Field, FieldsRow, Toggle, Select, NumberInput } = OptionsContext.components
+      const update = this.context.update;
+      const { Field, FieldsRow, Select, NumberInput } = this.context.components
 
       let isAccountDataLoaded = ref(false)
-      let pages = reactive({});
+      let pages: any = reactive({});
 
-      OptionsContext.getAccountData("facebook", "pages", (accountId: number | undefined) => {
-        isAccountDataLoaded.value = accountId !== undefined;
-        console.log(accountId, 'onchange')
-        if (accountId === undefined) {
-          pages.value = {};
+      this.context.getAccountData?.("facebook", "pages", {
+        onChange: (accountId: number | undefined) => {
+          isAccountDataLoaded.value = accountId !== undefined;
+          console.log(accountId, 'onchange')
+          if (accountId === undefined) {
+            pages.value = {};
+          }
         }
-      }, { extra: 'parameters' })
-        .value
-        .then((data: any) => {
+      }, { fb_extra: 'fb custom data here' })
+        .value?.then((data: any) => {
           isAccountDataLoaded.value = true;
           pages.value = data;
           console.log('account data successfully fetched', pages)
