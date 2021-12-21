@@ -25,6 +25,7 @@
           "label": "Page to show",
           "placeholder": "Select a page to show..."
         }
+      }
     },
     "facebook-driver": {
       "name": "Facebook",

@@ -24,6 +24,7 @@
         "account_picker": {
           "label": "Page à afficher",
           "placeholder": "Choisissez une page à afficher..."
+        }
       }
     },
     "facebook-driver": {
