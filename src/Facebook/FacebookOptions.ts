@@ -1,12 +1,10 @@
 import {
   ISlideOptionsContext,
   VueInstance,
-  SlideModule,
+  SlideOptionsModule,
 } from "dynamicscreen-sdk-js";
 
-import i18next from "i18next";
-
-export default class FacebookOptionsModule extends SlideModule {
+export default class FacebookOptionsModule extends SlideOptionsModule {
     async onReady() {
         return true;
     };
