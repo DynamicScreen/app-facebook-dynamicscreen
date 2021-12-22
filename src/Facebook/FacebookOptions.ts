@@ -18,7 +18,7 @@ export default class FacebookOptionsModule extends SlideOptionsModule {
       let isAccountDataLoaded = ref(false)
       let pages: any = reactive({});
 
-      this.context.getAccountData?.("facebook", "pages", {
+      this.context.getAccountData?.("facebook-driver", "pages", {
         onChange: (accountId: number | undefined) => {
           isAccountDataLoaded.value = accountId !== undefined;
           console.log(accountId, 'onchange')
