@@ -25,7 +25,7 @@ modules:
         options:
             provider: facebook
             vue:
-                component: src/Unsplash/Unsplash.ts
+                component: src/FacebookDriver/FacebookAccountDriver.ts
             php:
                 handler: \DynamicScreen\Facebook\FacebookDriver\FacebookAuthProviderHandler
             node:

@@ -2,6 +2,7 @@
 
 namespace DynamicScreen\Facebook\FacebookDriver;
 
+use App\Domain\Module\Model\Module;
 use Carbon\Carbon;
 use Facebook\Facebook;
 use DynamicScreen\SdkPhp\Handlers\OAuthProviderHandler;
@@ -13,31 +14,9 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
 {
     public static string $provider = 'facebook';
 
-    public $default_config = [];
-
-    public function __construct($config = null)
+    public function __construct(Module $module, $config = null)
     {
-        $this->default_config = $config;
-    }
-
-    public function identifier()
-    {
-        return 'facebook-driver';
-    }
-
-    public function name()
-    {
-        return 'Facebook';
-    }
-
-    public function description()
-    {
-        return 'OAuth Facebook';
-    }
-
-    public function icon()
-    {
-        return "fab fa-facebook";
+        parent::__construct($module, $config);
     }
 
     public function color()
@@ -71,17 +50,6 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return $loginUrl;
 
     }
-
-//    public function renderOptions($infos): View
-//    {
-//        try {
-//            $infos = $this->getUserInfos($config);
-//            return view('accounts-options.facebook', compact('config', 'infos'));
-//        } catch (\Exception $e) {
-//            return view('accounts-options.facebook', compact('config'));
-//        }
-//
-//    }
 
     public function testConnection($config = null)
     {
@@ -289,7 +257,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
         return $pictureList;
     }
 
-    public function getName($id, $config = null)
+    public function getUserName($id, $config = null)
     {
         $config = $config ?? $this->default_config;
 
