@@ -13,7 +13,8 @@ class FacebookSlideHandler extends SlideHandler
     {
         $options = $slide->getOptions();
         $pageCount = (Integer)$options['pageCount'];
-        $postCount = (Integer)$options['postCount'];
+//        $postCount = (Integer)$options['postCount'];
+        $postCount = 1;
 
         $expiration = Carbon::now()->endOfDay();
         $cache_uuid = base64_encode(json_encode($slide->getOption('category')));
@@ -36,7 +37,7 @@ class FacebookSlideHandler extends SlideHandler
 //            ]);
 //        }
 
-        foreach (array_chunk($posts, $postCount) as $post) {
+        foreach ($posts as $post) {
             $this->addSlide([
                 'page' => $page,
                 'post' => $post,
