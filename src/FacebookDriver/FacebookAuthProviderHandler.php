@@ -208,7 +208,7 @@ class FacebookAuthProviderHandler extends OAuthProviderHandler
     {
         $config = $config ?? $this->default_config;
 
-        $fb = $this->getFB();
+        $fb = $this->getFB($config);
 
         $response = $fb->get('/me/accounts?fields=name');
 

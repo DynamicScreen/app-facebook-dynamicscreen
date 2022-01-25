@@ -5,6 +5,7 @@ namespace DynamicScreen\Facebook\Facebook;
 use Carbon\Carbon;
 use DynamicScreen\SdkPhp\Handlers\SlideHandler;
 use DynamicScreen\SdkPhp\Interfaces\ISlide;
+use Illuminate\Support\Arr;
 
 class FacebookSlideHandler extends SlideHandler
 {
@@ -23,14 +24,23 @@ class FacebookSlideHandler extends SlideHandler
         if ($driver == null) return;
 
         $page = $driver->getPage($options['pageId']);
-        $posts = $driver->getPosts($options['pageId'], ($pageCount * $postCount));
+//        $posts = $driver->getPosts($options['pageId'], ($pageCount * $postCount));
+        $posts = $driver->getPosts($options['pageId'], ($pageCount));
 
 
-        foreach (array_chunk($posts, $postCount) as $chunk) {
+//        foreach (array_chunk($posts, $postCount) as $chunk) {
+//            $this->addSlide([
+//                'page' => $page,
+//                'posts' => $chunk,
+//                'theme' => Arr::get($options, 'theme')
+//            ]);
+//        }
+
+        foreach (array_chunk($posts, $postCount) as $post) {
             $this->addSlide([
                 'page' => $page,
-                'posts' => $chunk,
-                'theme' => $options['theme']
+                'post' => $post,
+                'theme' => Arr::get($options, 'theme', 'white')
             ]);
         }
     }

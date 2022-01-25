@@ -6,7 +6,7 @@
         }
     ],
     "require": {
-        "facebook/graph-sdk": "^5.7"
+        "facebook/graph-sdk": "^5.1"
     },
     "autoload": {
         "psr-4": {

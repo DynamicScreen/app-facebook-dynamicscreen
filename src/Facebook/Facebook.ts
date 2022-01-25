@@ -19,13 +19,15 @@ export default class FacebookSlideModule extends SlideModule {
         const slide = reactive(this.context.slide) as IPublicSlide;
         const logo: string = "fab fa-facebook";
         const isPostWithAttachment = computed(() => {
-            return !!slide.data.attachmentUrl;
+            return !!slide.data.post.media_url;
         })
         const postAttachment = isPostWithAttachment.value ? ref(slide.data.attachmentUrl) : null;
-        const text = ref(slide.data.text);
-        const userPicture = ref(slide.data.user.picture);
-        const userName = ref(slide.data.user.name);
-        const publicationDate = ref(slide.data.publicationDate);
+        const text = ref(slide.data.post.message);
+        //@ts-ignore
+        const userPicture = ref(slide.data.page.picture.data.url);
+        //@ts-ignore
+        const userName = ref(slide.data.page.username);
+        const publicationDate = ref(slide.data.post.created_time);
 
         this.context.onPlay(async () => {
             this.context.anime({

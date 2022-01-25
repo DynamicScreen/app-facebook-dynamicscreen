@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00ab467a8dc9b22fc2fe46481c69a8a6",
+    "content-hash": "3baaedf91427f2b3101d5fef3db49c03",
     "packages": [
         {
             "name": "facebook/graph-sdk",
-            "version": "5.7.0",
+            "version": "5.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-graph-sdk.git",
@@ -63,6 +63,7 @@
                 "issues": "https://github.com/facebook/php-graph-sdk/issues",
                 "source": "https://github.com/facebook/php-graph-sdk/tree/5.1.4"
             },
+            "abandoned": true,
             "time": "2016-05-13T17:28:30+00:00"
         }
     ],
@@ -74,5 +75,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
