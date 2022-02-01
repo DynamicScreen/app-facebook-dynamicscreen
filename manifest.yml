@@ -6,7 +6,7 @@ logo: fab fa-facebook
 version: 0.3.0
 channel: stable
 api-level: 1
-color: orange
+color: blue
 author:
     name: DynamicScreen
     email: bonjour@dynamicscreen.com
@@ -20,7 +20,7 @@ modules:
         logo: fab fa-facebook
         description: modules.facebook-driver.description
         identifier: facebook-driver
-        color: orange
+        color: blue
         type: auth-provider
         options:
             provider: facebook
@@ -34,7 +34,7 @@ modules:
     -   name: modules.facebook.name
         logo: fab fa-facebook
         identifier: facebook
-        color: pink
+        color: blue
         type: slide
         description: modules.facebook.description
         options:
